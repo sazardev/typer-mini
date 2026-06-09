@@ -20,6 +20,9 @@ function createWindow() {
   })
 
   mainWindow.loadFile('index.html')
+
+  mainWindow.on('maximize', () => mainWindow.webContents.send('window-state', 'maximized'))
+  mainWindow.on('unmaximize', () => mainWindow.webContents.send('window-state', 'normal'))
 }
 
 ipcMain.on('window-minimize', () => mainWindow.minimize())
@@ -30,9 +33,6 @@ ipcMain.on('window-maximize', () => {
 ipcMain.on('window-close', () => mainWindow.close())
 
 ipcMain.handle('window-is-maximized', () => mainWindow.isMaximized())
-
-mainWindow.on('maximize', () => mainWindow.webContents.send('window-state', 'maximized'))
-mainWindow.on('unmaximize', () => mainWindow.webContents.send('window-state', 'normal'))
 
 app.whenReady().then(createWindow)
 

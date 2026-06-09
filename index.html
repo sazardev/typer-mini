@@ -3,18 +3,69 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' https://api.fontshare.com https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://api.fontshare.com https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' https://api.fontshare.com https://cdn.fontshare.com https://fonts.googleapis.com https://fonts.gstatic.com 'unsafe-inline'; font-src 'self' https://api.fontshare.com https://cdn.fontshare.com https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'">
   <title>typer-mini</title>
   <link href="https://api.fontshare.com/v2/css?f[]=general-sans@200,300,400,500,600,700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+  <div id="profile-overlay"></div>
+  <aside id="profile-panel">
+    <div class="prof-header">
+      <span class="prof-title">Profile</span>
+      <button id="profile-close" class="prof-close">✕</button>
+    </div>
+    <div class="prof-body">
+      <section class="prof-section">
+        <h3>Overview</h3>
+        <div class="prof-overview-grid">
+          <div class="prof-stat"><span class="prof-stat-val" id="prof-total-chars">0</span><span class="prof-stat-lbl">total chars</span></div>
+          <div class="prof-stat"><span class="prof-stat-val" id="prof-total-errors">0</span><span class="prof-stat-lbl">errors</span></div>
+          <div class="prof-stat"><span class="prof-stat-val" id="prof-total-time">0h 0m</span><span class="prof-stat-lbl">time spent</span></div>
+          <div class="prof-stat"><span class="prof-stat-val" id="prof-sessions">0</span><span class="prof-stat-lbl">sessions</span></div>
+          <div class="prof-stat"><span class="prof-stat-val" id="prof-best-wpm">0</span><span class="prof-stat-lbl">best wpm</span></div>
+          <div class="prof-stat"><span class="prof-stat-val" id="prof-best-streak">0</span><span class="prof-stat-lbl">best streak</span></div>
+          <div class="prof-stat"><span class="prof-stat-val" id="prof-overall-acc">0%</span><span class="prof-stat-lbl">overall acc</span></div>
+        </div>
+        <div class="prof-session-sub">
+          <span>Session: </span>
+          <span class="p-mono" id="prof-cur-wpm">0</span><span> wpm · </span>
+          <span class="p-mono" id="prof-cur-acc">0%</span><span> · streak </span>
+          <span class="p-mono" id="prof-cur-streak">0</span>
+        </div>
+      </section>
+
+      <section class="prof-section">
+        <h3>Letters</h3>
+        <div id="prof-letters"></div>
+      </section>
+
+      <section class="prof-section">
+        <h3>Fingers</h3>
+        <div id="prof-fingers"></div>
+      </section>
+
+      <section class="prof-section">
+        <h3>Slowest Transitions</h3>
+        <div id="prof-transitions"></div>
+      </section>
+
+      <section class="prof-section">
+        <h3>Session History</h3>
+        <div id="prof-history"></div>
+      </section>
+    </div>
+  </aside>
+
   <header id="titlebar">
     <div class="titlebar-drag">
       <span class="titlebar-title">typer-mini</span>
     </div>
     <div class="titlebar-controls">
+      <button id="btn-profile" class="titlebar-btn" title="Profile">☰</button>
+      <button id="btn-reset" class="titlebar-btn" title="Reset progress">↺</button>
       <button id="btn-theme" class="titlebar-btn" title="Toggle theme">◐</button>
       <button id="btn-minimize" class="titlebar-btn" title="Minimize">─</button>
       <button id="btn-maximize" class="titlebar-btn" title="Maximize">□</button>
@@ -23,19 +74,71 @@
   </header>
 
   <main id="content">
-    <div class="editor-wrapper">
-      <textarea
-        id="editor"
-        placeholder="Start typing..."
-        spellcheck="false"
-      ></textarea>
-      <div id="stats" class="stats">
-        <span id="word-count">0 words</span>
-        <span id="char-count">0 chars</span>
-      </div>
+    <div id="pause-overlay">
+      <span id="pause-msg">Paused</span>
     </div>
+
+    <section id="stats-bar">
+      <div class="stat-group">
+        <span class="stat-value" id="stat-wpm">0</span>
+        <span class="stat-label">wpm</span>
+      </div>
+      <div class="stat-group">
+        <span class="stat-value" id="stat-acc">100</span>
+        <span class="stat-label">%</span>
+      </div>
+      <div class="stat-group">
+        <span class="stat-value" id="stat-time">0:00</span>
+        <span class="stat-label">time</span>
+      </div>
+      <div class="stat-group">
+        <span class="stat-value" id="stat-streak">0</span>
+        <span class="stat-label">streak</span>
+      </div>
+    </section>
+
+    <section id="typing-area">
+      <div id="word-display-wrapper">
+        <div id="word-display"></div>
+        <div id="cursor-element"></div>
+      </div>
+    </section>
+
+    <section id="keyboard"></section>
+
+    <section id="letter-bar"></section>
+
+    <footer id="level-footer">
+      <span id="level-name">Level 1: Home Row Core</span>
+      <span id="level-progress">0/6 letters mastered</span>
+    </footer>
   </main>
 
-  <script src="renderer.js"></script>
+  <script src="js/keyboard.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/analyzer.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/profile.js"></script>
+  <script>
+    TyperMini.App.init()
+    TyperMini.App.startStatsLoop()
+
+    document.getElementById('btn-minimize').addEventListener('click', function () {
+      window.windowAPI.minimize()
+    })
+    document.getElementById('btn-maximize').addEventListener('click', function () {
+      window.windowAPI.maximize()
+    })
+    document.getElementById('btn-close').addEventListener('click', function () {
+      window.windowAPI.close()
+    })
+    window.windowAPI.onStateChange(function (state) {
+      var btn = document.getElementById('btn-maximize')
+      btn.textContent = state === 'maximized' ? '❐' : '□'
+    })
+  </script>
+
 </body>
 </html>
