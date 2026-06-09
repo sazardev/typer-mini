@@ -1,0 +1,162 @@
+:root {
+  --bg: #000000;
+  --fg: #ffffff;
+  --border: #333333;
+  --hover: #1a1a1a;
+  --font-ui: 'General Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+}
+
+:root.theme-light {
+  --bg: #ffffff;
+  --fg: #000000;
+  --border: #cccccc;
+  --hover: #e5e5e5;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-ui);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+}
+
+#titlebar {
+  display: flex;
+  align-items: center;
+  height: 36px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.titlebar-drag {
+  flex: 1;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding-left: 14px;
+  -webkit-app-region: drag;
+  app-region: drag;
+}
+
+.titlebar-title {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: var(--fg);
+  opacity: 0.5;
+  text-transform: uppercase;
+}
+
+.titlebar-controls {
+  display: flex;
+  height: 100%;
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+}
+
+.titlebar-btn {
+  width: 46px;
+  height: 100%;
+  border: none;
+  background: transparent;
+  color: var(--fg);
+  font-size: 13px;
+  cursor: pointer;
+  font-family: var(--font-ui);
+  transition: background 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.6;
+}
+
+.titlebar-btn:hover {
+  background: var(--hover);
+  opacity: 1;
+}
+
+.titlebar-close:hover {
+  background: #e81123;
+  color: #ffffff;
+  opacity: 1;
+}
+
+#content {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.editor-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 40px;
+}
+
+#editor {
+  flex: 1;
+  width: 100%;
+  border: none;
+  outline: none;
+  resize: none;
+  background: transparent;
+  color: var(--fg);
+  font-family: var(--font-mono);
+  font-size: 18px;
+  line-height: 1.7;
+  caret-color: var(--fg);
+  transition: color 0.3s ease;
+}
+
+#editor::placeholder {
+  color: var(--fg);
+  opacity: 0.15;
+  font-family: var(--font-mono);
+}
+
+#editor::-webkit-scrollbar {
+  width: 4px;
+}
+
+#editor::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#editor::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 2px;
+}
+
+.stats {
+  display: flex;
+  gap: 24px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  opacity: 0.35;
+  transition: opacity 0.2s ease;
+}
+
+.stats:hover {
+  opacity: 0.7;
+}
