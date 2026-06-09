@@ -1,15 +1,51 @@
 {
   "name": "typer-mini",
   "version": "1.0.0",
-  "description": "Minimalist monochromatic typing app",
+  "description": "Minimalist monochrome typing tutor — learn to type with progressive lessons, per-key analytics, and finger guidance",
   "main": "main.js",
-  "scripts": {
-    "start": "electron .",
-    "dev": "electron . --dev"
-  },
   "author": "",
   "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win --x64",
+    "build:portable": "electron-builder --win portable --x64"
+  },
+  "build": {
+    "appId": "com.typermini.app",
+    "productName": "Typer Mini",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "index.html",
+      "styles.css",
+      "js/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        { "target": "nsis", "arch": ["x64"] },
+        { "target": "portable", "arch": ["x64"] }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Typer Mini",
+      "deleteAppDataOnUninstall": false
+    },
+    "portable": {
+      "artifactName": "TyperMini-${version}-portable.${ext}"
+    }
+  },
   "devDependencies": {
-    "electron": "^33.0.0"
+    "electron": "^33.0.0",
+    "electron-builder": "^25.1.8"
   }
 }
